@@ -10,8 +10,8 @@
 """
 
 import logging
-from gevent.server import DatagramServer
-from gevent.lock import Semaphore
+from threading import Semaphore
+import SocketServer
 from collections import deque, defaultdict
 import pymongo
 import dataset
@@ -97,5 +97,10 @@ class Server(object):
             keeper.push(saver)
 
     def run(self, host, port):
-        server = DatagramServer((host, port), self.process)
+        class ThreadedUDPRequestHandler(SocketServer.BaseRequestHandler):
+            def handle(sub_self):
+                data = sub_self.request[0]
+                self.process(data, sub_self.client_address)
+
+        server = SocketServer.ThreadingUDPServer((host, port), ThreadedUDPRequestHandler)
         server.serve_forever()

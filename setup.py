@@ -3,9 +3,9 @@
 from setuptools import setup, find_packages
 setup(
     name="dbpost",
-    version="0.2.2",
+    version="0.2.5",
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
-    install_requires=['gevent', 'pymongo', 'dataset'],
+    install_requires=['pymongo', 'dataset'],
     scripts=['dbpost/bin/run_dbpost.py'],
     url="https://github.com/dantezhu/dbpost",
     license="BSD",
