@@ -33,8 +33,6 @@ class RequireDebugOrNot(logging.Filter):
         return debug if self._need_debug else not debug
 
 
-FILE_MODULE_NAME = op.splitext(op.basename(__file__))[0]
-
 LOG_FILE_PATH = "/tmp/dbpost.log"
 
 LOG_FORMAT = '\n'.join((
@@ -83,11 +81,6 @@ LOGGING = {
     },
 
     'loggers': {
-        'default': {
-            'handlers': ['console', 'rotating_file'],
-            'level': 'DEBUG',
-            'propagate': False
-        },
         'dbpost': {
             'handlers': ['console', 'rotating_file'],
             'level': 'DEBUG',
@@ -97,7 +90,7 @@ LOGGING = {
 }
 
 
-logger = logging.getLogger('default')
+logger = logging.getLogger('dbpost')
 debug = False
 
 
