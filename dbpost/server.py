@@ -59,10 +59,10 @@ class Server(object):
         self.max_pool_size = max_pool_size or constants.MAX_POOL_SIZE
         self.keeper_dict = defaultdict(lambda: ObjKeeper(self.max_pool_size))
 
-    def process(self, data, address):
-        values = decrypt(self.secret, data)
+    def handle_message(self, message, address):
+        values = decrypt(self.secret, message)
         if not values:
-            logger.error('values is None. data: %s', data)
+            logger.error('values is None. message: %s', message)
             return
         logger.debug('values: %s', values)
 
@@ -99,8 +99,16 @@ class Server(object):
     def run(self, host, port):
         class ThreadedUDPRequestHandler(SocketServer.BaseRequestHandler):
             def handle(sub_self):
-                data = sub_self.request[0]
-                self.process(data, sub_self.client_address)
+                message = sub_self.request[0]
+                try:
+                    self.handle_message(message, sub_self.client_address)
+                except:
+                    logger.error('exc occur.', exc_info=True)
 
         server = SocketServer.ThreadingUDPServer((host, port), ThreadedUDPRequestHandler)
-        server.serve_forever()
+        try:
+            server.serve_forever()
+        except KeyboardInterrupt:
+            pass
+        except:
+            logger.error('exc occur.', exc_info=True)
