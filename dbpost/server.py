@@ -10,6 +10,7 @@
 """
 
 import time
+import datetime
 import logging
 from threading import Semaphore
 import SocketServer
@@ -74,8 +75,8 @@ class Server(object):
             return
         logger.debug('values: %s', values)
 
-        uri = values['uri']
-        tb_name = values['tb']
+        uri = self._extract_string(values['uri'])
+        tb_name = self._extract_string(values['tb'])
         model = values['m']
 
         keeper = self.keeper_dict[uri]
@@ -122,6 +123,25 @@ class Server(object):
         for uri, keeper in exceed_item_list:
             # 删除
             self.keeper_dict.pop(uri, None)
+
+    def _extract_string(self, uri):
+        """
+        展开string, 替换对应的占位符
+        placeholder: year, month, day, hour, minute, second
+        :param uri:
+        :return:
+        """
+
+        now = datetime.datetime.now()
+
+        return uri.format(
+            year=now.year,
+            month=now.month,
+            day=now.day,
+            hour=now.hour,
+            minute=now.minute,
+            second=now.second,
+        )
 
     def run(self, host, port):
         class ThreadedUDPRequestHandler(SocketServer.BaseRequestHandler):
