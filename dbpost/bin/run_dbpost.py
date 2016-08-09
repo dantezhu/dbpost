@@ -100,6 +100,7 @@ def build_parser():
     parser.add_argument('-p', '--port', default=constants.SERVER_PORT, type=int, help='bind port', action='store')
     parser.add_argument('-s', '--secret', help='secret', action='store')
     parser.add_argument('-m', '--max_pool_size', help='max_pool_size', type=int, action='store')
+    parser.add_argument('-c', '--max_uri_count', help='max_uri_count', type=int, action='store')
     parser.add_argument('-d', '--debug', default=False, help='debug mode', action='store_true')
     parser.add_argument('-v', '--version', action='version', version='%s' % dbpost.__version__)
     return parser
@@ -123,7 +124,7 @@ def run():
         host=args.host, port=args.port, debug=args.debug)
     )
 
-    prog = Server(args.secret, args.max_pool_size)
+    prog = Server(args.secret, max_pool_size=args.max_pool_size, max_uri_count=args.max_uri_count)
     try:
         prog.run(args.host, args.port)
     except KeyboardInterrupt:

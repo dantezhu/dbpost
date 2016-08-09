@@ -9,6 +9,7 @@
     m   数据(dict)
 """
 
+import time
 import logging
 from threading import Semaphore
 import SocketServer
@@ -26,11 +27,16 @@ class ObjKeeper(object):
     每种资源
     """
 
+    active_time = None
+
     def __init__(self, max_size):
+        self.active_time = time.time()
         self.lock = Semaphore(max_size)
         self.objs = deque()
 
     def pop(self):
+        self.active_time = time.time()
+
         # 获取锁
         self.lock.acquire()
 
@@ -51,12 +57,14 @@ class ObjKeeper(object):
 class Server(object):
     keeper_dict = None
 
-    def __init__(self, secret=None, max_pool_size=None):
+    def __init__(self, secret=None, max_pool_size=None, max_uri_count=None):
         """
         max_pool_size   每个uri对应的最多的client数
+        max_uri_count   最多可以有多少个uri
         """
         self.secret = secret
         self.max_pool_size = max_pool_size or constants.MAX_POOL_SIZE
+        self.max_uri_count = max_uri_count
         self.keeper_dict = defaultdict(lambda: ObjKeeper(self.max_pool_size))
 
     def handle_message(self, message, address):
@@ -71,6 +79,8 @@ class Server(object):
         model = values['m']
 
         keeper = self.keeper_dict[uri]
+
+        self._check_and_remove_exceed_uri()
 
         saver = None
         try:
@@ -95,6 +105,23 @@ class Server(object):
             logger.error('exc occur', exc_info=True)
         finally:
             keeper.push(saver)
+
+    def _check_and_remove_exceed_uri(self):
+        """
+        检测超过的uri数量，并且删除
+        多线程访问，锁的问题得考虑下
+        :return:
+        """
+        if self.max_uri_count is None or len(self.keeper_dict) <= self.max_uri_count:
+            # 不限制大小或者还没有达到限制
+            return
+
+        # 从大到小排列
+        exceed_item_list = sorted(self.keeper_dict.items(), key=lambda x: -x[1].active_time)[self.max_uri_count:]
+
+        for uri, keeper in exceed_item_list:
+            # 删除
+            self.keeper_dict.pop(uri, None)
 
     def run(self, host, port):
         class ThreadedUDPRequestHandler(SocketServer.BaseRequestHandler):
