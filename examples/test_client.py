@@ -18,6 +18,17 @@ client.put(
 
 client.put(
     dict(
+        uri='mongodb://admin:admin@127.0.0.1/test_{year}',
+        tb='user_{hour}',
+        m=dict(
+            name='dantezhu',
+            password='dantezhu',
+        )
+    )
+)
+
+client.put(
+    dict(
         uri='mysql://root@127.0.0.1/test',
         tb='user',
         m=dict(
