@@ -7,7 +7,7 @@ client = Client()
 
 client.put(
     dict(
-        uri='mongodb://dantezhu:dantezhu@127.0.0.1/dogrun_dev_statistic',
+        uri='mongodb://admin:admin@127.0.0.1/test',
         tb='user',
         m=dict(
             name='dantezhu',
@@ -18,7 +18,7 @@ client.put(
 
 client.put(
     dict(
-        uri='mysql://root@127.0.0.1/test_stat',
+        uri='mysql://root@127.0.0.1/test',
         tb='user',
         m=dict(
             name='dantezhu',
