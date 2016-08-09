@@ -135,12 +135,12 @@ class Server(object):
         now = datetime.datetime.now()
 
         return uri.format(
-            year=now.year,
-            month=now.month,
-            day=now.day,
-            hour=now.hour,
-            minute=now.minute,
-            second=now.second,
+            year='%04d' % now.year,
+            month='%02d' % now.month,
+            day='%02d' % now.day,
+            hour='%02d' % now.hour,
+            minute='%02d' % now.minute,
+            second='%02d' % now.second,
         )
 
     def run(self, host, port):

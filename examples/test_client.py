@@ -8,7 +8,7 @@ client = Client()
 client.put(
     dict(
         uri='mongodb://admin:admin@127.0.0.1/test',
-        tb='user',
+        tb='user_{year}{month}{month}{hour}{minute}{second}',
         m=dict(
             name='dantezhu',
             password='dantezhu',
