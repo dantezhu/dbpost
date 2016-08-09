@@ -64,7 +64,7 @@ class Server(object):
         """
         self.secret = secret
         self.max_pool_size = max_pool_size or constants.MAX_POOL_SIZE
-        self.max_uri_count = max_uri_count
+        self.max_uri_count = max_uri_count or constants.MAX_URI_COUNT
         self.keeper_dict = defaultdict(lambda: ObjKeeper(self.max_pool_size))
 
     def handle_message(self, message, address):
