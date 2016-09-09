@@ -11,7 +11,6 @@
 
 import time
 import datetime
-import logging
 from threading import Semaphore
 import SocketServer
 from collections import deque, defaultdict
