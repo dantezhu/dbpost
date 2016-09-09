@@ -3,7 +3,6 @@
 import socket
 from utils import encrypt
 import constants
-from log import logger
 
 
 class Client(object):
@@ -24,10 +23,12 @@ class Client(object):
         self.put = self.post
 
     def post(self, msg):
+        """
+        发送数据
+        这里考虑后还是决定不捕获异常，由调用方负责
+        :param msg:
+        :return: 发送成功的字节数
+        """
         data = encrypt(self.secret, msg)
-        try:
-            # 返回的发送成功的字节数
-            return self.sock.sendto(data, (self.host, self.port))
-        except Exception, e:
-            logger.error('exc occur. e: %s, msg: %r', e, msg, exc_info=True)
-            return None
+        # 返回的发送成功的字节数
+        return self.sock.sendto(data, (self.host, self.port))
