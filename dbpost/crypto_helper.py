@@ -1,21 +1,22 @@
 # -*- coding: utf-8 -*-
 
-'''
+"""
 为网络使用，封装了一下常用的算法，直接用base64返回，就没那么多复杂的事了
 
 depends:
     pycrypto
-'''
+"""
 
 import base64
 
 from Crypto.Cipher import ARC4
 
+
 class ARC4Wrapper(object):
-    '''
+    """
     ARC4算法的封装
     之所以在机密和解密函数都要新生成crypto_obj，是因为用同一个obj加密然后解密的结果不对
-    '''
+    """
 
     _secret = None
 

@@ -19,8 +19,7 @@ import pymongo
 import dataset
 import constants
 from utils import decrypt
-
-logger = logging.getLogger('dbpost')
+from log import logger
 
 
 class ObjKeeper(object):

@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+NAME = 'dbpost'
+
 SERVER_HOST = '127.0.0.1'
 SERVER_PORT = 35000
 
