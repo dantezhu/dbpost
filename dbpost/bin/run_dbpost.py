@@ -10,7 +10,6 @@ run_dbpost.py -p 35000 -s 'l%t-$72o67!hs1-^!1&ayj5uf2b39s57' -d
 from gevent import monkey; monkey.patch_all()
 
 import argparse
-import os.path as op
 import logging
 import logging.config
 
