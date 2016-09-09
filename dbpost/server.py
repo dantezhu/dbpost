@@ -67,25 +67,10 @@ class Server(object):
         self.keeper_dict = defaultdict(lambda: ObjKeeper(self.max_pool_size))
 
     def handle_message(self, message, address):
-        # TODO 等升级完删掉
-        # 即时server本身支持了密钥，也要支持没有加密的数据
-        try_secret_list = [self.secret, None] if self.secret else [self.secret]
-
-        values = None
-        for secret in try_secret_list:
-            values = decrypt(secret, message)
-            if values:
-                break
-        else:
-            # 没有找到能正常解出values的
+        values = decrypt(self.secret, message)
+        if not values:
             logger.error('values is None. message: %r', message)
             return
-
-        # 以后还是变回这样
-        # values = decrypt(self.secret, message)
-        # if not values:
-        #     logger.error('values is None. message: %r', message)
-        #     return
 
         logger.debug('values: %r', values)
 
