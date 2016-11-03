@@ -155,7 +155,7 @@ class Server(object):
                 try:
                     self.handle_message(message, sub_self.client_address)
                 except:
-                    logger.error('exc occur. message: %r', message, exc_info=True)
+                    logger.error('exc occur. message: %r, address: %s', message, sub_self.client_address, exc_info=True)
 
         class MyUDPServer(SocketServer.ThreadingUDPServer):
             daemon_threads = True
