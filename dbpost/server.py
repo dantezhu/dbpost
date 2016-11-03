@@ -151,7 +151,11 @@ class Server(object):
                 except:
                     logger.error('exc occur.', exc_info=True)
 
-        server = SocketServer.ThreadingUDPServer((host, port), ThreadedUDPRequestHandler)
+        class MyUDPServer(SocketServer.ThreadingUDPServer):
+            daemon_threads = True
+            allow_reuse_address = True
+
+        server = MyUDPServer((host, port), ThreadedUDPRequestHandler)
         try:
             server.serve_forever()
         except KeyboardInterrupt:
