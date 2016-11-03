@@ -45,7 +45,7 @@ LOGGING = {
     'loggers': {
         'dbpost': {
             'handlers': ['console', 'flylog'],
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'propagate': False
         },
     }
