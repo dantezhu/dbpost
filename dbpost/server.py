@@ -9,6 +9,7 @@
     m   数据(dict)
 """
 
+import logging.config
 import time
 import datetime
 from threading import Semaphore
@@ -56,14 +57,19 @@ class ObjKeeper(object):
 class Server(object):
     keeper_dict = None
 
-    def __init__(self, secret=None, max_pool_size=None, max_uri_count=None):
+    def __init__(self, config=None):
         """
-        max_pool_size   每个uri对应的最多的client数
-        max_uri_count   最多可以有多少个uri
+        MAX_POOL_SIZE   每个uri对应的最多的client数
+        MAX_URI_COUNT   最多可以有多少个uri
         """
-        self.secret = secret
-        self.max_pool_size = max_pool_size or constants.MAX_POOL_SIZE
-        self.max_uri_count = max_uri_count or constants.MAX_URI_COUNT
+        config = config or dict()
+
+        if hasattr(config, 'LOGGING'):
+            logging.config.dictConfig(config.LOGGING)
+
+        self.secret = getattr(config, 'SECRET', None)
+        self.max_pool_size = getattr(config, 'MAX_POOL_SIZE', constants.MAX_POOL_SIZE)
+        self.max_uri_count = getattr(config, 'MAX_URI_COUNT', constants.MAX_URI_COUNT)
         self.keeper_dict = defaultdict(lambda: ObjKeeper(self.max_pool_size))
 
     def handle_message(self, message, address):
@@ -72,7 +78,7 @@ class Server(object):
             logger.error('values is None. message: %r', message)
             return
 
-        logger.debug('values: %r', values)
+        # logger.debug('values: %r', values)
 
         uri = self._extract_string(values['uri'])
         tb_name = self._extract_string(values['tb'])
@@ -149,9 +155,13 @@ class Server(object):
                 try:
                     self.handle_message(message, sub_self.client_address)
                 except:
-                    logger.error('exc occur.', exc_info=True)
+                    logger.error('exc occur. message: %r', message, exc_info=True)
 
-        server = SocketServer.ThreadingUDPServer((host, port), ThreadedUDPRequestHandler)
+        class MyUDPServer(SocketServer.ThreadingUDPServer):
+            daemon_threads = True
+            allow_reuse_address = True
+
+        server = MyUDPServer((host, port), ThreadedUDPRequestHandler)
         try:
             server.serve_forever()
         except KeyboardInterrupt:
