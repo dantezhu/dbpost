@@ -75,7 +75,7 @@ class Server(object):
     def handle_message(self, message, address):
         values = decrypt(self.secret, message)
         if not values:
-            logger.error('values is None. message: %r', message)
+            logger.error('message unpack fail. message: %r, address: %s', message, address)
             return
 
         # logger.debug('values: %r', values)
@@ -108,7 +108,7 @@ class Server(object):
                 tb = saver[tb_name]
                 tb.insert(model)
         except:
-            logger.error('exc occur', exc_info=True)
+            logger.error('exc occur. message: %r, address: %s', message, address, exc_info=True)
         finally:
             keeper.push(saver)
 
