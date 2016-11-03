@@ -108,7 +108,7 @@ class Server(object):
                 tb = saver[tb_name]
                 tb.insert(model)
         except:
-            logger.error('exc occur. message: %r, address: %s', message, address, exc_info=True)
+            logger.error('exc occur. values: %r, address: %s', values, address, exc_info=True)
         finally:
             keeper.push(saver)
 
