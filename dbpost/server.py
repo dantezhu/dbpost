@@ -161,6 +161,8 @@ class Server(object):
             daemon_threads = True
             allow_reuse_address = True
 
+        logger.info("running on %s:%s", host, port)
+
         server = MyUDPServer((host, port), ThreadedUDPRequestHandler)
         try:
             server.serve_forever()

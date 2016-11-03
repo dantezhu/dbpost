@@ -14,7 +14,6 @@ import sys
 import dbpost
 from dbpost.server import Server
 from dbpost import constants
-from dbpost.log import logger
 
 
 def build_parser():
@@ -40,10 +39,6 @@ def load_config(filename):
 
 def run():
     args = build_parser().parse_args()
-
-    logger.info("Running dbpost on %(host)s:%(port)s" % dict(
-        host=args.host, port=args.port)
-    )
 
     app = Server(config=load_config(args.config) if args.config else None)
     try:
