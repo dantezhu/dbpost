@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 setup(
     name="dbpost",
-    version="0.2.17",
+    version="0.2.19",
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     install_requires=['pymongo', 'dataset'],
     scripts=['dbpost/bin/run_dbpost.py'],
