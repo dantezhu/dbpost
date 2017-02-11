@@ -62,8 +62,6 @@ class Server(object):
         MAX_POOL_SIZE   每个uri对应的最多的client数
         MAX_URI_COUNT   最多可以有多少个uri
         """
-        config = config or dict()
-
         if hasattr(config, 'LOGGING'):
             logging.config.dictConfig(config.LOGGING)
 
